@@ -36,42 +36,32 @@ void setup()
 
   pinMode(BRAKE_PIN, INPUT_PULLUP);
   pinMode(STEERING_LEDPIN, OUTPUT);
-  steeringRange[0] = 1024;
-  steeringRange[1] = -1024;
   
   pinMode(THROTTLE_LEDPIN, OUTPUT);
-  throttleRange[0] = 1024;
-  throttleRange[1] = -1024;
 }
 
 void loop() 
 {
-  sensorPacket.intValue[0] = (long)(analogRead(STEERINGPIN));
-  sensorPacket.intValue[1] = (long)(analogRead(THROTTLEPIN));
-  sensorPacket.intValue[2] = (long)digitalRead(BRAKE_PIN);
- 
-  //steeringBrightness = (int)(2.55 * sensorPacket.dataValue[0]);
-  //analogWrite(STEERING_LEDPIN, steeringBrightness);
-
-  //throttleBrightness = (int)(2.55 * sensorPacket.dataValue[1]);
-  //analogWrite(THROTTLE_LEDPIN, steeringBrightness);
-  /*
-  String outStr = String(sensorPacket.dataValue[0], 3) + " " +
-                  String(sensorPacket.dataValue[1], 3) + " " +
+  long v = analogRead(STEERINGPIN);
+  sensorPacket.intValue[0] = v;
+  v = analogRead(THROTTLEPIN);
+  sensorPacket.intValue[1] = v;
+  v = (long)digitalRead(BRAKE_PIN);
+  sensorPacket.intValue[2] = v;
+  #ifdef DEBUGSTR 
+  String outStr = String(sensorPacket.intValue[0]) + " " +
+                  String(sensorPacket.intValue[1]) + " " +
                   String(sensorPacket.intValue[2]);
   Serial.println(outStr);
-  for(int byteIdx = 0; byteIdx < 12; byteIdx++)
-  {
-    Serial.print(sensorPacket.dataCharArray[byteIdx]);
-  }
-  Serial.println();
-  */
+  #endif
 }
 
 // function that executes whenever data is requested by master
 // this function is registered as an event, see setup()
 void requestEvent() 
 {
+  #ifdef DEBUGSTR 
   Serial.println("sent");
+  #endif
   Wire.write(sensorPacket.dataCharArray, 12);
 }   
