@@ -6,16 +6,10 @@
 #define STEERINGPIN A0
 #define THROTTLEPIN A1
 #define BRAKE_PIN  5
-#define STEERING_LEDPIN 6
-#define THROTTLE_LEDPIN 7
+// I2C info
+#define STDMODE   100000 // 100K
+#define FASTMODE  400000 // 400K
 
-int steeringBrightness = 0;    // how bright the LED is
-int throttleBrightness = 0;    // how bright the LED is
-float steeringRange[2];
-float throttleRange[2];
-float sensorValue = 0;
-
-bool strReady = true;
 
 union DataPacket
 {
@@ -24,20 +18,18 @@ union DataPacket
   char dataCharArray[12];
 };
 
+float sensorValue = 0;
 DataPacket sensorPacket;
 
 void setup() 
 {
-  Wire.setClock(100000);
+  Wire.setClock(FASTMODE);
   // read jumpers for address?
   Wire.begin(8);                // join i2c bus with address #8
   Wire.onRequest(requestEvent); // register event
   Serial.begin(9600);  // start serial for output
 
   pinMode(BRAKE_PIN, INPUT_PULLUP);
-  pinMode(STEERING_LEDPIN, OUTPUT);
-  
-  pinMode(THROTTLE_LEDPIN, OUTPUT);
 }
 
 void loop() 
