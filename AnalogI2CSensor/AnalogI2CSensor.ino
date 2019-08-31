@@ -18,6 +18,7 @@
 #define STEERINGPIN A0
 #define THROTTLEPIN A1
 #define BRAKE_PIN  10
+#define CLUTCH_PIN  11
 // I2C address jumpers
 #define ADDR_0 5
 #define ADDR_1 6
@@ -30,9 +31,9 @@
 // data packet to send to master - 3 floats/longs (can mix), 12 characters
 union DataPacket
 {
-  float dataValue[3];
-  long  intValue[3];
-  char dataCharArray[12];
+  float dataValue[4];
+  long  intValue[4];
+  char dataCharArray[16];
 };
 // current A2D value
 float sensorValue = 0;
@@ -46,6 +47,7 @@ void setup()
 {
   // digital pin setup
   pinMode(BRAKE_PIN, INPUT_PULLUP);
+  pinMode(CLUTCH_PIN, INPUT_PULLUP);
   pinMode(ADDR_0, INPUT_PULLUP);
   pinMode(ADDR_1, INPUT_PULLUP);
   pinMode(ADDR_2, INPUT_PULLUP);
@@ -87,10 +89,13 @@ void loop()
   sensorPacket.intValue[1] = v;
   v = (long)digitalRead(BRAKE_PIN);
   sensorPacket.intValue[2] = v;
+  v = (long)digitalRead(CLUTCH_PIN);
+  sensorPacket.intValue[3] = v;
   #ifdef DEBUGSTR 
   String outStr = String(sensorPacket.intValue[0]) + " " +
                   String(sensorPacket.intValue[1]) + " " +
-                  String(sensorPacket.intValue[2]);
+                  String(sensorPacket.intValue[2]) + " " +
+                  String(sensorPacket.intValue[3]);
   Serial.println(outStr);
   #endif
 }
@@ -103,5 +108,5 @@ void requestEvent()
   #ifdef DEBUGSTR 
   Serial.println("sent");
   #endif
-  Wire.write(sensorPacket.dataCharArray, 12);
+  Wire.write(sensorPacket.dataCharArray, 16);
 }   
