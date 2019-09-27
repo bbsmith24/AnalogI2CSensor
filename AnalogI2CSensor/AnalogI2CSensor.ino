@@ -15,6 +15,10 @@
 // uncomment for debug string output to serial
 //#define DEBUGSTR
 // sensor pins
+// A0 labeled A0
+// A1 labeled A1
+// BRAKE_PIN labeled D0
+// CLUTCH_PIN labeled D1
 #define STEERINGPIN A0
 #define THROTTLEPIN A1
 #define BRAKE_PIN  10
@@ -46,7 +50,8 @@ DataPacket sensorPacket;
 void setup() 
 {
   // digital pin setup
-  pinMode(BRAKE_PIN, INPUT_PULLUP);
+  // for direct wire to brake voltage splitter
+  pinMode(BRAKE_PIN, INPUT);
   pinMode(CLUTCH_PIN, INPUT_PULLUP);
   pinMode(ADDR_0, INPUT_PULLUP);
   pinMode(ADDR_1, INPUT_PULLUP);
