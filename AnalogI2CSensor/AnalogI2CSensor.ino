@@ -2,13 +2,10 @@
 // ProMini combo sensor
 //   4 A2D channels
 //   8 Digital channels
-//  
-// for Arduino ProMini 5V
-// could also run on other Arduino boards
 //
 // Brian B. Smith
 // brianbsmith.com
-// August 2019
+// December 2021
 // 
 #include <Wire.h>
 // uncomment for debug string output to serial
